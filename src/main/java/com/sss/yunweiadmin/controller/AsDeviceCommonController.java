@@ -195,11 +195,13 @@ public class AsDeviceCommonController {
         ExcelListener<AsNetworkDeviceSpecialExcel> listener1 = new ExcelListener<>();
         ExcelListener<AsSecurityProductsSpecialExcel> listener2 = new ExcelListener<>();
         ExcelListener<AsIoSpecialExcel> listener3 = new ExcelListener<>();
+        //
+
         //获取sheet对象
-        ReadSheet sheet0 = EasyExcel.readSheet(0).head(AsComputerExcel.class).registerReadListener(listener0).build();
-        ReadSheet sheet1 = EasyExcel.readSheet(1).head(AsNetworkDeviceSpecialExcel.class).registerReadListener(listener1).build();
-        ReadSheet sheet2 = EasyExcel.readSheet(2).head(AsSecurityProductsSpecialExcel.class).registerReadListener(listener2).build();
-        ReadSheet sheet3 = EasyExcel.readSheet(3).head(AsIoSpecialExcel.class).registerReadListener(listener3).build();
+        ReadSheet sheet0 = EasyExcel.readSheet("计算机").head(AsComputerExcel.class).registerReadListener(listener0).build();
+        ReadSheet sheet1 = EasyExcel.readSheet("网络设备").head(AsNetworkDeviceSpecialExcel.class).registerReadListener(listener1).build();
+        ReadSheet sheet2 = EasyExcel.readSheet("安全产品").head(AsSecurityProductsSpecialExcel.class).registerReadListener(listener2).build();
+        ReadSheet sheet3 = EasyExcel.readSheet("外部设备").head(AsIoSpecialExcel.class).registerReadListener(listener3).build();
         //读取数据
         excelReader.read(sheet0, sheet1, sheet2, sheet3);
         //获取数据

@@ -200,6 +200,7 @@ public class SysUserController {
             }
         }
         //
+        httpSession.removeAttribute("user");
         httpSession.setAttribute("user", dbUser);
         userVO.setUser(dbUser);
         userVO.setMenuList(menuList);
