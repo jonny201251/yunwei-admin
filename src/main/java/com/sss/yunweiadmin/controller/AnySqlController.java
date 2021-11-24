@@ -51,8 +51,21 @@ public class AnySqlController {
                 String columnType = arr[1];
             }
         }
-
         return true;
+    }
+
+    @GetMapping("getTableColumnName")
+    public String getTableColumnName(String tableName) {
+        List<String> list = new ArrayList<>();
+        String table_schema = "yunwei";
+        String sql = "select column_name from information_schema.columns where table_schema='" + table_schema + "' and table_name = '" + tableName + "'";
+        List<LinkedHashMap<String, String>> resultList = anySqlMapper.execute(sql);
+        for (LinkedHashMap<String, String> resultMap : resultList) {
+            for (Map.Entry<String, String> entry : resultMap.entrySet()) {
+                list.add(entry.getValue());
+            }
+        }
+        return String.join(",", list);
     }
 
     @GetMapping("generateFormItem")
