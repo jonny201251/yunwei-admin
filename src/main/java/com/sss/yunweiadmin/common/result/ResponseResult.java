@@ -51,6 +51,7 @@ public class ResponseResult implements Serializable {
         ResponseResult responseResult = new ResponseResult();
         responseResult.setCode(0);
         responseResult.setMsg(msg);
+        responseResult.setData(msg);
         return responseResult;
     }
 

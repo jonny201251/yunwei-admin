@@ -13,8 +13,7 @@ public class UserLoginInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws IOException {
         SysUser user = (SysUser) request.getSession().getAttribute("user");
         if (user == null) {
-            //用户未登录,重定向到登录页面
-            response.sendRedirect(request.getContextPath() + "/login");
+            throw new RuntimeException("用户未登录");
         }
         return true;
     }

@@ -24,7 +24,7 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         excludeList.add("/*.js");
         excludeList.add("/*.css");
 
-//        registry.addInterceptor(new UserLoginInterceptor()).addPathPatterns("/**").excludePathPatterns(excludeList);
+        registry.addInterceptor(new UserLoginInterceptor()).addPathPatterns("/**").excludePathPatterns(excludeList);
         super.addInterceptors(registry);
     }
 
