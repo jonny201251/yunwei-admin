@@ -1,36 +1,31 @@
 package com.sss.yunweiadmin.common.result;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.apache.poi.ss.formula.functions.T;
-
-import java.io.Serializable;
+import lombok.NoArgsConstructor;
 
 @Data
-public class ResponseResult implements Serializable {
-    private static final long serialVersionUID = 5876920254332715285L;
+@AllArgsConstructor
+@NoArgsConstructor
+public class ResponseResult {
     private Integer code;
     private String msg;
     private Object data;
 
     public static ResponseResult success() {
-        ResultCode code = ResultCode.SUCCESS;
-        ResponseResult responseResult = new ResponseResult();
-        responseResult.setCode(code.getCode());
-        responseResult.setMsg(code.getMsg());
-        responseResult.setData(code.getMsg());
-        return responseResult;
+        return new ResponseResult(200, "操作成功", "");
     }
 
     public static ResponseResult success(Object data) {
         ResponseResult responseResult = success();
         if (data instanceof IPage) {
-            IPage<T> page = (IPage<T>) data;
+            IPage page = (IPage) data;
             int pageSize = (int) page.getSize();
             int total = (int) page.getTotal();
             //计算总页数
             int totalPage = total / pageSize + ((total % pageSize == 0) ? 0 : 1);
-            PaginationData<T> paginationVO = new PaginationData<>((int) page.getCurrent(), pageSize, total, totalPage, page.getRecords());
+            PaginationData paginationVO = new PaginationData((int) page.getCurrent(), pageSize, total, totalPage, page.getRecords());
             responseResult.setData(paginationVO);
         } else {
             responseResult.setData(data);
@@ -40,25 +35,10 @@ public class ResponseResult implements Serializable {
     }
 
     public static ResponseResult fail() {
-        ResultCode code = ResultCode.FAIL;
-        ResponseResult responseResult = new ResponseResult();
-        responseResult.setCode(code.getCode());
-        responseResult.setMsg(code.getMsg());
-        return responseResult;
+        return new ResponseResult(0, "操作失败", "");
     }
 
     public static ResponseResult fail(String msg) {
-        ResponseResult responseResult = new ResponseResult();
-        responseResult.setCode(0);
-        responseResult.setMsg(msg);
-        responseResult.setData(msg);
-        return responseResult;
-    }
-
-    public static ResponseResult fail(ResultCode code) {
-        ResponseResult responseResult = new ResponseResult();
-        responseResult.setCode(code.getCode());
-        responseResult.setMsg(code.getMsg());
-        return responseResult;
+        return new ResponseResult(0, msg, msg);
     }
 }

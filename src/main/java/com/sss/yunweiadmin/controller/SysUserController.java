@@ -109,24 +109,10 @@ public class SysUserController {
         return sysUserService.delete(idArr);
     }
 
-    @OperateLog(module = "用户模块", type = "登录")
-    @GetMapping("login")
-    public UserVO login(String loginName, String password) {
+    private UserVO getUserVO(SysUser user) {
         UserVO userVO = new UserVO();
-        //根据 登录账号 查询出用户
-        List<SysUser> userList = sysUserService.list(new QueryWrapper<SysUser>().eq("login_name", loginName));
-        if (userList.size() != 1) {
-            throw new RuntimeException("用户名错误");
-        }
-        SysUser dbUser = userList.get(0);
-        //校验 登录密码
-        String dbPassword = dbUser.getPassword();
-        String pagePassword = SecureUtil.md5(password);
-        if (!dbPassword.equals(pagePassword)) {
-            throw new RuntimeException("密码错误");
-        }
         //根据用户获取角色
-        List<SysRoleUser> roleUserList = sysRoleUserService.list(new QueryWrapper<SysRoleUser>().eq("user_id", dbUser.getId()));
+        List<SysRoleUser> roleUserList = sysRoleUserService.list(new QueryWrapper<SysRoleUser>().eq("user_id", user.getId()));
         if (ObjectUtil.isEmpty(roleUserList)) {
             throw new RuntimeException("用户没有分配角色");
         }
@@ -200,15 +186,45 @@ public class SysUserController {
             }
         }
         //
-        httpSession.removeAttribute("user");
-        httpSession.setAttribute("user", dbUser);
-        userVO.setUser(dbUser);
+        userVO.setUser(user);
         userVO.setMenuList(menuList);
         userVO.setOperateButtonMap(operateButtonMap);
         userVO.setDataListButtonMap(dataListButtonMap);
         userVO.setStartProcessButtonMap(startProcessButtonMap);
         userVO.setQueryMap(queryMap);
         return userVO;
+    }
+
+    @OperateLog(module = "用户模块", type = "登录")
+    @GetMapping("login")
+    public UserVO login(String loginName, String password) {
+        UserVO userVO = null;
+        //根据 登录账号 查询出用户
+        List<SysUser> userList = sysUserService.list(new QueryWrapper<SysUser>().eq("login_name", loginName));
+        if (userList.size() != 1) {
+            throw new RuntimeException("用户名错误");
+        }
+        SysUser dbUser = userList.get(0);
+        //校验 登录密码
+        String dbPassword = dbUser.getPassword();
+        String pagePassword = SecureUtil.md5(password);
+        if (!dbPassword.equals(pagePassword)) {
+            throw new RuntimeException("密码错误");
+        }
+        userVO = getUserVO(dbUser);
+        //
+        httpSession.removeAttribute("user");
+        httpSession.setAttribute("user", dbUser);
+        return userVO;
+    }
+
+    @GetMapping("/ssoLogin")
+    public UserVO ssoLogin() {
+        SysUser user = (SysUser) httpSession.getAttribute("user");
+        if (user == null) {
+            throw new RuntimeException("用户未登录");
+        }
+        return getUserVO(user);
     }
 
     @GetMapping("logout")

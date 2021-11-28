@@ -21,10 +21,12 @@ public class WebMvcConfig extends WebMvcConfigurationSupport {
         List<String> excludeList = new ArrayList<>();
         excludeList.add("/sysUser/login");
         excludeList.add("/login");
+        excludeList.add("/ssologin");
+        excludeList.add("/redirect");
         excludeList.add("/back");
         excludeList.add("/*.js");
         excludeList.add("/*.css");
-        registry.addInterceptor(new UserLoginInterceptor()).addPathPatterns("/**").excludePathPatterns(excludeList);
+        registry.addInterceptor(new LoginInterceptor()).addPathPatterns("/**").excludePathPatterns(excludeList);
         super.addInterceptors(registry);
     }
 
