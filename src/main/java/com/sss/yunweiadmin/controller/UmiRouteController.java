@@ -17,7 +17,6 @@ public class UmiRouteController {
 
     @GetMapping("/redirect")
     public String redirect() {
-        System.out.println("redirect");
         //
         return "redirect:/ssologin";
     }
